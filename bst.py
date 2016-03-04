@@ -56,14 +56,22 @@ class Node(object):
         self.left = None
         self.right = None
 
+    def __str__(self):
+        return repr(self)
+
+    def __repr__(self):
+        return 'Node({k},{v},{s})'.format(k=repr(self.key),
+                v=repr(self.value), s=repr(self.size))
+
+
 if __name__ == '__main__':
     tree = BST()
-    for k, v in [(5, 'five'), (7, 'seven'), (2, 'two'), (3, 'three'), (1, 'one'), (8, 'eight')]:
+    for k, v in [(5, 'five'), (7, 'seven'), (2, 'two'), (3, 'three'),
+                (1, 'one'), (8, 'eight')]:
         tree.put(k, v)
 
     print('length:', len(tree))
-    print(tree.root.key)
-    print(tree.root.value)
+    print(tree.root)
 
     for n in range(10):
         print('get({0}): {1}'.format(n, tree.get(n)))
