@@ -5,6 +5,7 @@ def noempty(f):
         return f(self, *args, **kwargs)
     return decorator
 
+
 class BST(object):
     def __init__(self):
         self.root = None
@@ -56,7 +57,7 @@ class BST(object):
         """Does the tree contain a key/value pair with the given key?
         Return true or false.
         """
-        raise NotImplementedError()
+        return self.get(key) != None
 
     def isEmpty(self):
         """Return true if the tree is empty, false if it has at least
@@ -68,7 +69,6 @@ class BST(object):
     def minKey(self):
         """Return the smallest key in the tree."""
         return self._mink_at_node(self.root)
-
 
     def _mink_at_node(self, node):
         if node.left == None:
@@ -120,7 +120,19 @@ class BST(object):
 
     def rank(self, key):
         """Return the number of keys less than the given key."""
-        raise NotImplementedError()
+        return self._rank_at_node(key, self.root)
+
+    def _rank_at_node(self, key, node):
+        if node == None:
+            return 0
+        elif node.key >= key:
+            # Eliminate the current node and the right subtree. Return the
+            # rank of the left subtree.
+            return self._rank_at_node(key, node.left)
+        else:  # node.key < key:
+            # Accept the entire left subtree and the current node. Also
+            # search the right subtree for any additional matches.
+            return 1 + _size(node.left) + self._rank_at_node(key, node.right)
 
     def select(self, k):
         """Return the key of rank k."""
@@ -134,29 +146,75 @@ class BST(object):
         """Remove the largest key/value pair from the array."""
         raise NotImplementedError()
 
-    def size(self, low, high):
+    def num_between(self, low, high):
         """Number of keys between low and high, inclusive."""
-        raise NotImplementedError()
+        return _count(self.keys_between(low, high))
 
-    def keys(self, low, high):
+
+    def keys_between(self, low, high):
         """Generator function for the keys between low and high, inclusive.
         In sorted order.
         """
-        raise NotImplementedError()
+        if high < low:
+            raise ValueError("Low key must be less than high key.")
+        yield from self._kbtwn_at_node(low, high, self.root)
+
+    def _kbtwn_at_node(self, low, high, node):
+        if node == None:
+            return
+        elif node.key < low:
+            # Eliminate the current node and the left subtree. Yield the
+            # matching keys from the right subtree.
+            yield from self._kbtwn_at_node(low, high, node.right)
+        elif node.key >= low and node.key <= high:
+            # Can't eliminate any nodes. Yield matching nodes from the
+            # left subtree, the current node, and matching nodes from the
+            # right subtree.
+            yield from self._kbtwn_at_node(low, high, node.left)
+            yield node.key
+            yield from self._kbtwn_at_node(low, high, node.right)
+        elif node.key > high:
+            # Eliminate the current node and the right subtree. Yield the
+            # matching keys from the left subtree.
+            yield from self._kbtwn_at_node(low, high, node.left)
+
 
     def keys(self):
         """Generator function for every key in the tree in soted order."""
-        raise NotImplementedError()
+        yield from map(_key, self._subtree(self.root))
 
     def items(self):
         """Generator function for key value pairs in the tree, sorted by key."""
-        raise NotImplementedError()
+        yield from map(_item, self._subtree(self.root))
+
+    def _subtree(self, node):
+        if node == None:
+            return
+        yield from self._subtree(node.left)
+        yield node
+        yield from self._subtree(node.right)
+
 
 def _size(node):
     if node == None:
         return 0
     else:
         return node.size
+
+
+def _key(node):
+    return node.key
+
+
+def _item(node):
+    return node.key, node.value
+
+
+def _count(iterable):
+    num = 0
+    for i in iterable:
+        num += 1
+    return num
 
 class Node(object):
     def __init__(self, key, value, size):
