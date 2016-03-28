@@ -1,3 +1,9 @@
+def noempty(f):
+    def decorator(self, *args, **kwargs):
+        if self.isEmpty():
+            raise LookupError("Tree is empty.")
+        return f(self, *args, **kwargs)
+    return decorator
 
 class BST(object):
     def __init__(self):
@@ -42,79 +48,109 @@ class BST(object):
         node.size = _size(node.left) + _size(node.right) + 1
         return node
 
-    def delete(key):
+    def delete(self, key):
         """Remove a key/value pair from the tree"""
-        raise NotImplemented()
+        raise NotImplementedError()
 
-    def contains(key):
+    def contains(self, key):
         """Does the tree contain a key/value pair with the given key?
         Return true or false.
         """
-        raise NotImplemented()
+        raise NotImplementedError()
 
-    def isEmpty(key):
+    def isEmpty(self):
         """Return true if the tree is empty, false if it has at least
         one key/value pair.
         """
-        raise NotImplemented()
+        return self.root == None
 
-    def minKey():
+    @noempty
+    def minKey(self):
         """Return the smallest key in the tree."""
-        raise NotImplemented()
+        return self._mink_at_node(self.root)
 
-    def min():
+
+    def _mink_at_node(self, node):
+        if node.left == None:
+            return node.key
+        else:
+            return self._mink_at_node(node.left)
+
+    @noempty
+    def min(self):
         """Return the smallest key/value pair as a tuple."""
-        raise NotImplemented()
+        return self._min_at_node(self.root)
 
-    def maxKey():
+    def _min_at_node(self, node):
+        if node.left == None:
+            return (node.key, node.value)
+        else:
+            return self._min_at_node(node.left)
+
+    @noempty
+    def maxKey(self):
         """Return the largest key in the tree."""
-        raise NotImplemented()
+        return self._maxk_at_node(self.root)
 
-    def max():
+
+    def _maxk_at_node(self, node):
+        if node.right == None:
+            return node.key
+        else:
+            return self._maxk_at_node(node.right)
+
+    @noempty
+    def max(self):
         """Return the largest key/value pair as a tuple."""
-        raise NotImplemented()
+        return self._max_at_node(self.root)
 
-    def floor(key):
+    def _max_at_node(self, node):
+        if node.right == None:
+            return (node.key, node.value)
+        else:
+            return self._max_at_node(node.right)
+
+    def floor(self, key):
         """Return the largest key less than or equal to the given key."""
-        raise NotImplemented()
+        raise NotImplementedError()
 
-    def ceiling(key):
+    def ceiling(self, key):
         """Return the smallest key greater than or equal to the given key."""
-        raise NotImplemented()
+        raise NotImplementedError()
 
-    def rank(key):
+    def rank(self, key):
         """Return the number of keys less than the given key."""
-        raise NotImplemented()
+        raise NotImplementedError()
 
-    def select(k):
+    def select(self, k):
         """Return the key of rank k."""
-        raise NotImplemented()
+        raise NotImplementedError()
 
-    def deleteMin():
+    def deleteMin(self):
         """Remove the lowest key/value pair from the array."""
-        raise NotImplemented()
+        raise NotImplementedError()
 
-    def deleteMax():
+    def deleteMax(self):
         """Remove the largest key/value pair from the array."""
-        raise NotImplemented()
+        raise NotImplementedError()
 
-    def size(low, high):
+    def size(self, low, high):
         """Number of keys between low and high, inclusive."""
-        raise NotImplemented()
+        raise NotImplementedError()
 
-    def keys(low, high):
+    def keys(self, low, high):
         """Generator function for the keys between low and high, inclusive.
         In sorted order.
         """
-        raise NotImplemented()
+        raise NotImplementedError()
 
-    def keys():
+    def keys(self):
         """Generator function for every key in the tree in soted order."""
-        raise NotImplemented()
+        raise NotImplementedError()
 
-    def items():
+    def items(self):
         """Generator function for key value pairs in the tree, sorted by key."""
-        raise NotImplemented()
+        raise NotImplementedError()
 
 def _size(node):
     if node == None:
