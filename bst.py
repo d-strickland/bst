@@ -11,7 +11,7 @@ class BST(object):
         self.root = None
 
     def __len__(self):
-        if self.root == None:
+        if self.root is None:
             return 0
         return self.root.size
 
@@ -22,7 +22,7 @@ class BST(object):
         return self._get_at_node(key, self.root)
 
     def _get_at_node(self, key, node):
-        if node == None:
+        if node is None:
             return None
         if key < node.key:
             return self._get_at_node(key, node.left)
@@ -30,7 +30,7 @@ class BST(object):
             return self._get_at_node(key, node.right)
         else:  # key == node.key
             return node.value
-        
+
     def put(self, key, value):
         """Insert a key-value pair into the tree.
         If the key is already present, replace its value with the one given.
@@ -38,7 +38,7 @@ class BST(object):
         self.root = self._put_at_node(key, value, self.root)
 
     def _put_at_node(self, key, value, node):
-        if node == None:
+        if node is None:
             return Node(key, value, 1)
         if key < node.key:
             node.left = self._put_at_node(key, value, node.left)
@@ -57,13 +57,13 @@ class BST(object):
         """Does the tree contain a key/value pair with the given key?
         Return true or false.
         """
-        return self.get(key) != None
+        return self.get(key) is not None
 
     def isEmpty(self):
         """Return true if the tree is empty, false if it has at least
         one key/value pair.
         """
-        return self.root == None
+        return self.root is None
 
     @noempty
     def minKey(self):
@@ -71,7 +71,7 @@ class BST(object):
         return self._mink_at_node(self.root)
 
     def _mink_at_node(self, node):
-        if node.left == None:
+        if node.left is None:
             return node.key
         else:
             return self._mink_at_node(node.left)
@@ -82,7 +82,7 @@ class BST(object):
         return self._min_at_node(self.root)
 
     def _min_at_node(self, node):
-        if node.left == None:
+        if node.left is None:
             return (node.key, node.value)
         else:
             return self._min_at_node(node.left)
@@ -92,9 +92,8 @@ class BST(object):
         """Return the largest key in the tree."""
         return self._maxk_at_node(self.root)
 
-
     def _maxk_at_node(self, node):
-        if node.right == None:
+        if node.right is None:
             return node.key
         else:
             return self._maxk_at_node(node.right)
@@ -105,7 +104,7 @@ class BST(object):
         return self._max_at_node(self.root)
 
     def _max_at_node(self, node):
-        if node.right == None:
+        if node.right is None:
             return (node.key, node.value)
         else:
             return self._max_at_node(node.right)
@@ -123,7 +122,7 @@ class BST(object):
         return self._rank_at_node(key, self.root)
 
     def _rank_at_node(self, key, node):
-        if node == None:
+        if node is None:
             return 0
         elif node.key >= key:
             # Eliminate the current node and the right subtree. Return the
@@ -150,7 +149,6 @@ class BST(object):
         """Number of keys between low and high, inclusive."""
         return _count(self.keys_between(low, high))
 
-
     def keys_between(self, low, high):
         """Generator function for the keys between low and high, inclusive.
         In sorted order.
@@ -160,7 +158,7 @@ class BST(object):
         yield from self._kbtwn_at_node(low, high, self.root)
 
     def _kbtwn_at_node(self, low, high, node):
-        if node == None:
+        if node is None:
             return
         elif node.key < low:
             # Eliminate the current node and the left subtree. Yield the
@@ -178,17 +176,17 @@ class BST(object):
             # matching keys from the left subtree.
             yield from self._kbtwn_at_node(low, high, node.left)
 
-
     def keys(self):
         """Generator function for every key in the tree in soted order."""
         yield from map(_key, self._subtree(self.root))
 
     def items(self):
-        """Generator function for key value pairs in the tree, sorted by key."""
+        """Generator function for key value pairs in the tree, sorted by key.
+        """
         yield from map(_item, self._subtree(self.root))
 
     def _subtree(self, node):
-        if node == None:
+        if node is None:
             return
         yield from self._subtree(node.left)
         yield node
@@ -196,7 +194,7 @@ class BST(object):
 
 
 def _size(node):
-    if node == None:
+    if node is None:
         return 0
     else:
         return node.size
@@ -216,6 +214,7 @@ def _count(iterable):
         num += 1
     return num
 
+
 class Node(object):
     def __init__(self, key, value, size):
         self.key = key
@@ -229,13 +228,19 @@ class Node(object):
 
     def __repr__(self):
         return 'Node({k},{v},{s})'.format(k=repr(self.key),
-                v=repr(self.value), s=repr(self.size))
+                                          v=repr(self.value),
+                                          s=repr(self.size))
 
 
 if __name__ == '__main__':
     tree = BST()
-    for k, v in [(5, 'five'), (7, 'seven'), (2, 'two'), (3, 'three'),
-                (1, 'one'), (8, 'eight')]:
+    for k, v in [
+            (5, 'five'),
+            (7, 'seven'),
+            (2, 'two'),
+            (3, 'three'),
+            (1, 'one'),
+            (8, 'eight')]:
         tree.put(k, v)
 
     print('length:', len(tree))
@@ -243,4 +248,3 @@ if __name__ == '__main__':
 
     for n in range(10):
         print('get({0}): {1}'.format(n, tree.get(n)))
-
